@@ -5,6 +5,7 @@ namespace App\Shop\Products;
 use App\Shop\Categories\Category;
 use App\Shop\ProductAttributes\ProductAttribute;
 use App\Shop\ProductImages\ProductImage;
+use App\Shop\Stores\Store;
 use Gloudemans\Shoppingcart\Contracts\Buyable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
@@ -42,6 +43,12 @@ class Product extends Model implements Buyable
     public function categories()
     {
         return $this->belongsToMany(Category::class);
+    }
+
+
+    public function stores()
+    {
+        return $this->belongsToMany(Store::class);
     }
 
     /**
