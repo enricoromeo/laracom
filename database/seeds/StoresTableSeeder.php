@@ -7,6 +7,6 @@ class StoresTableSeeder extends Seeder
 {
     public function run()
     {
-        factory(Store::class)->create();
+        factory(Store::class, 15)->create();
     }
 }

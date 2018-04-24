@@ -48,7 +48,7 @@ class Product extends Model implements Buyable
 
     public function stores()
     {
-        return $this->belongsToMany(Store::class);
+        return $this->belongsTo(Store::class);
     }
 
     /**

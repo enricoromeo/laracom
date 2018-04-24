@@ -27,6 +27,7 @@ $factory->define(Product::class, function (Faker\Generator $faker) {
         'cover' => $file->store('products', ['disk' => 'public']),
         'quantity' => 10,
         'price' => 5.00,
-        'status' => 1
+        'status' => 1,
+        'store_id' => $this->faker->numberBetween(1, 10)
     ];
 });

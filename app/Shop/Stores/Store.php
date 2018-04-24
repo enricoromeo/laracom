@@ -18,6 +18,7 @@ class Store extends Model
      * @var array
      */
     protected $fillable = [
+        'store_id',
         'name',
         'slug',
         'description',
@@ -35,7 +36,7 @@ class Store extends Model
 
     public function products()
     {
-        return $this->belongsToMany(Product::class);
+        return $this->HasMany(Product::class);
     }
 
 }
