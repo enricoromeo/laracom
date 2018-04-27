@@ -8,6 +8,7 @@ use App\Shop\Stores\Exceptions\StoreInvalidArgumentException;
 use App\Shop\Stores\Exceptions\StoreNotFoundException;
 use App\Shop\Stores\Store;
 use App\Shop\Stores\Repositories\Interfaces\StoreRepositoryInterface;
+use App\Shop\Stores\Transformations\StoreTransformable;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\UploadedFile;
@@ -16,6 +17,8 @@ use Illuminate\Support\Facades\DB;
 
 class StoreRepository extends BaseRepository implements StoreRepositoryInterface
 {
+    use StoreTransformable;
+
     public function __construct(Store $store)
     {
         parent::__construct($store);
@@ -104,14 +107,6 @@ class StoreRepository extends BaseRepository implements StoreRepositoryInterface
         return $file->store('stores', ['disk' => 'public']);
     }
 
-    /**
-     * Detach the categories
-     */
-    public function detachProducts()
-    {
-        $this->model->products()->detach();
-    }
-
 
     /**
      * Return the categories which the product is associated with
@@ -124,13 +119,22 @@ class StoreRepository extends BaseRepository implements StoreRepositoryInterface
     }
 
     /**
-     * Sync the products
-     *
-     * @param array $params
+     * @param $file
+     * @param null $disk
+     * @return bool
      */
-    public function syncProducts(array $params)
+    public function deleteFile(array $file, $disk = null) : bool
     {
-        $this->model->products()->sync($params);
+        return $this->update(['cover' => null], $file['store']);
+    }
+
+    /**
+     * @param string $text
+     * @return mixed
+     */
+    public function searchStore(string $text) : Collection
+    {
+        return $this->model->searchStore($text);
     }
 
 

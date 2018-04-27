@@ -6,6 +6,7 @@ use App\Shop\AttributeValues\AttributeValue;
 use App\Shop\Base\Interfaces\BaseRepositoryInterface;
 use App\Shop\ProductAttributes\ProductAttribute;
 use App\Shop\Products\Product;
+use App\Shop\Stores\Store;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
 
@@ -52,4 +53,7 @@ interface ProductRepositoryInterface extends BaseRepositoryInterface
     public function listCombinations() : Collection;
 
     public function findProductCombination(ProductAttribute $attribute);
+
+    public function findStore() : Store;
+    
 }

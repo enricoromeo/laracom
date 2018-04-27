@@ -23,6 +23,8 @@ class CreateProductsTable extends Migration
             $table->integer('quantity');
             $table->decimal('price');
             $table->integer('status')->default(0);
+            $table->integer('store_id')->unsigned();
+            $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
             $table->timestamps();
         });
     }

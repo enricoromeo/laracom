@@ -17,14 +17,15 @@ trait StoreTransformable
     {
         $file = Storage::disk('public')->exists($store->cover) ? $store->cover : null;
 
-        $store = new Store;
-        $store->id = (int) $store->id;
-        $store->name = $store->name;
-        $store->slug = $store->slug;
-        $store->description = $store->description;
-        $store->cover = $file;
-        $store->status = $store->status;
+        $st = new Store;
 
-        return $store;
+        $st->id = (int) $store->id;
+        $st->name = $store->name;
+        $st->slug = $store->slug;
+        $st->description = $store->description;
+        $st->cover = $file;
+        $st->status = $store->status;
+        
+        return $st;
     }
 }

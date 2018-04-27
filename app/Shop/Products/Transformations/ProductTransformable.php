@@ -27,6 +27,7 @@ trait ProductTransformable
         $prod->quantity = $product->quantity;
         $prod->price = $product->price;
         $prod->status = $product->status;
+        $prod->store_id = $product->store_id;
 
         return $prod;
     }

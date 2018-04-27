@@ -30,6 +30,7 @@ class Product extends Model implements Buyable
         'cover',
         'quantity',
         'price',
+        'store_id',
         'status'
     ];
 
@@ -46,7 +47,7 @@ class Product extends Model implements Buyable
     }
 
 
-    public function stores()
+    public function store()
     {
         return $this->belongsTo(Store::class);
     }

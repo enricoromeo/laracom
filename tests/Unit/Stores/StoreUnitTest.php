@@ -27,26 +27,6 @@ class StoreUnitTest extends TestCase
       $this->assertTrue($exists);
   }
 
-  /** @test */
-  public function it_can_detach_all_the_products()
-  {
-      $store = factory(Store::class)->create();
-      $products = factory(Product::class, 4)->create();
-
-      $storeRepo = new StoreRepository($store);
-
-      $ids = $products->transform(function (Product $product) {
-          return $product->id;
-      })->all();
-
-      $storeRepo->syncProducts($ids);
-
-      $this->assertCount(4, $storeRepo->getProducts());
-
-      $storeRepo->detachProducts();
-
-      $this->assertCount(0, $storeRepo->getProducts());
-  }
 
 
 }

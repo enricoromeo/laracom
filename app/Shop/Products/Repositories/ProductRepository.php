@@ -9,6 +9,7 @@ use App\Shop\ProductImages\ProductImage;
 use App\Shop\Products\Exceptions\ProductInvalidArgumentException;
 use App\Shop\Products\Exceptions\ProductNotFoundException;
 use App\Shop\Products\Product;
+use App\Shop\Stores\Store;
 use App\Shop\Products\Repositories\Interfaces\ProductRepositoryInterface;
 use App\Shop\Products\Transformations\ProductTransformable;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -279,4 +280,13 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
             return $value->value;
         });
     }
+
+    /**
+     * @return mixed
+     */
+    public function findStore() : Store
+    {
+        return $this->model->store;
+    }
+
 }

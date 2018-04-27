@@ -31,6 +31,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['admin'], 'as' => 'admin.' ]
                 Route::get('remove-image-product', 'ProductController@removeImage')->name('product.remove.image');
                 Route::get('remove-image-thumb', 'ProductController@removeThumbnail')->name('product.remove.thumb');
             });
+            Route::namespace('Stores')->group(function () {
+                Route::resource('stores', 'StoreController');
+                Route::get('remove-image-store', 'StoreController@removeImage')->name('store.remove.image');
+
+            });
             Route::namespace('Customers')->group(function () {
                 Route::resource('customers', 'CustomerController');
                 Route::resource('customers.addresses', 'CustomerAddressController');

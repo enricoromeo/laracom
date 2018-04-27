@@ -23,10 +23,6 @@ class CreateStoresTable extends Migration
             $table->timestamps();
         });
 
-        Schema::table('products', function($table) {
-           $table->integer('store_id')->unsigned();
-           $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
-        });
     }
 
     /**

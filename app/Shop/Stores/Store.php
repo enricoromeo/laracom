@@ -4,6 +4,7 @@ namespace App\Shop\Stores;
 
 use App\Shop\Products\Product;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Sofa\Eloquence\Eloquence;
 
 class Store extends Model
@@ -18,7 +19,6 @@ class Store extends Model
      * @var array
      */
     protected $fillable = [
-        'store_id',
         'name',
         'slug',
         'description',
@@ -36,7 +36,16 @@ class Store extends Model
 
     public function products()
     {
-        return $this->HasMany(Product::class);
+        return $this->hasMany(Product::class);
+    }
+
+    /**
+     * @param string $term
+     * @return Collection
+     */
+    public function searchStore(string $term) : Collection
+    {
+        return self::search($term)->get();
     }
 
 }

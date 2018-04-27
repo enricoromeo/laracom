@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Shop\Categories\Category;
 use App\Shop\Products\Product;
+use App\Shop\Stores\Store;
 use App\Shop\Products\Repositories\ProductRepository;
 use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
@@ -21,7 +22,7 @@ class ProductFeatureTest extends TestCase
             ->assertStatus(200)
             ->assertSee($product->name);
     }
-    
+
     /** @test */
     public function it_can_search_the_product()
     {
@@ -39,6 +40,7 @@ class ProductFeatureTest extends TestCase
     {
         $product = 'apple';
         $cover = UploadedFile::fake()->image('file.png', 600, 600);
+        $store = factory(Store::class)->create();
 
         $params = [
             'sku' => $this->faker->numberBetween(1111111, 999999),
@@ -49,6 +51,7 @@ class ProductFeatureTest extends TestCase
             'quantity' => 10,
             'price' => 9.95,
             'status' => 1,
+            'store_id' => $store->id,
             'image' => [
                 UploadedFile::fake()->image('file.png', 200, 200),
                 UploadedFile::fake()->image('file1.png', 200, 200),
@@ -69,7 +72,7 @@ class ProductFeatureTest extends TestCase
             ->assertRedirect(url('/'))
             ->assertSessionHas('message', 'Image delete successful');
     }
-    
+
     /** @test */
     public function it_can_remove_the_cover_image()
     {
@@ -82,7 +85,7 @@ class ProductFeatureTest extends TestCase
             ->assertRedirect(url('/'))
             ->assertSessionHas('message', 'Image delete successful');
     }
-    
+
     /** @test */
     public function it_can_delete_the_product()
     {
@@ -119,7 +122,7 @@ class ProductFeatureTest extends TestCase
             ->assertStatus(200)
             ->assertSee($product->name);
     }
-    
+
     /** @test */
     public function it_can_show_the_product_create()
     {
@@ -167,7 +170,7 @@ class ProductFeatureTest extends TestCase
             ->assertRedirect(route('admin.products.edit', 2))
             ->assertSessionHas('message', 'Create successful');
     }
-    
+
     /** @test */
     public function it_can_create_the_product()
     {
@@ -231,7 +234,7 @@ class ProductFeatureTest extends TestCase
             ->assertSessionHas(['message'])
             ->assertRedirect(route('admin.products.edit', $this->product->id));
     }
-    
+
     /** @test */
     public function it_can_sync_the_categories_associated_with_the_product()
     {

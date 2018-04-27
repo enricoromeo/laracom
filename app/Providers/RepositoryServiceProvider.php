@@ -34,6 +34,8 @@ use App\Shop\ProductAttributes\Repositories\ProductAttributeRepository;
 use App\Shop\ProductAttributes\Repositories\ProductAttributeRepositoryInterface;
 use App\Shop\Products\Repositories\Interfaces\ProductRepositoryInterface;
 use App\Shop\Products\Repositories\ProductRepository;
+use App\Shop\Stores\Repositories\Interfaces\StoreRepositoryInterface;
+use App\Shop\Stores\Repositories\StoreRepository;
 use App\Shop\Provinces\Repositories\Interfaces\ProvinceRepositoryInterface;
 use App\Shop\Provinces\Repositories\ProvinceRepository;
 use Illuminate\Support\ServiceProvider;
@@ -75,6 +77,11 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             ProductRepositoryInterface::class,
             ProductRepository::class
+        );
+
+        $this->app->bind(
+            StoreRepositoryInterface::class,
+            StoreRepository::class
         );
 
         $this->app->bind(

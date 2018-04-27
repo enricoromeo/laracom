@@ -19,12 +19,10 @@ interface StoreRepositoryInterface extends BaseRepositoryInterface
 
   public function deleteStore(Store $store) : bool;
 
-  public function detachProducts();
-
   public function getProducts() : Collection;
 
-  public function syncProducts(array $params);
-
   public function saveCoverImage(UploadedFile $file) : string;
+
+  public function searchStore(string $text) : Collection;
 
 }

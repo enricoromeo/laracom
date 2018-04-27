@@ -8,7 +8,9 @@ use App\Shop\ProductImages\ProductImageRepository;
 use App\Shop\Products\Exceptions\ProductInvalidArgumentException;
 use App\Shop\Products\Exceptions\ProductNotFoundException;
 use App\Shop\Products\Product;
+use App\Shop\Stores\Store;
 use App\Shop\Products\Repositories\ProductRepository;
+use App\Shop\Stores\Repositories\StoreRepository;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
@@ -43,6 +45,7 @@ class ProductUnitTest extends TestCase
             $this->assertEquals($product->quantity, $foundProduct->quantity);
             $this->assertEquals($product->price, $foundProduct->price);
             $this->assertEquals($product->status, $foundProduct->status);
+            $this->assertEquals($product->store_id, $foundProduct->store->id);
         });
     }
 
@@ -109,6 +112,8 @@ class ProductUnitTest extends TestCase
     {
         $product = 'apple';
         $cover = UploadedFile::fake()->image('file.png', 600, 600);
+        $store = factory(Store::class)->create();
+
 
         $params = [
             'sku' => $this->faker->numberBetween(1111111, 999999),
@@ -119,6 +124,7 @@ class ProductUnitTest extends TestCase
             'quantity' => 10,
             'price' => 9.95,
             'status' => 1,
+            'store_id' => $store->id,
             'image' => [
                 UploadedFile::fake()->image('file.png', 200, 200),
                 UploadedFile::fake()->image('file1.png', 200, 200),
@@ -148,6 +154,7 @@ class ProductUnitTest extends TestCase
     {
         $product = 'apple';
         $cover = UploadedFile::fake()->image('file.png', 600, 600);
+        $store = factory(Store::class)->create();
 
         $params = [
             'sku' => $this->faker->numberBetween(1111111, 999999),
@@ -158,6 +165,7 @@ class ProductUnitTest extends TestCase
             'quantity' => 10,
             'price' => 9.95,
             'status' => 1,
+            'store_id' => $store->id,
             'image' => [
                 UploadedFile::fake()->image('file.png', 200, 200),
                 UploadedFile::fake()->image('file1.png', 200, 200),
@@ -288,6 +296,8 @@ class ProductUnitTest extends TestCase
         $this->assertEquals($this->product->quantity, $found->quantity);
         $this->assertEquals($this->product->price, $found->price);
         $this->assertEquals($this->product->status, $found->status);
+        $this->assertEquals($this->product->store_id, $found->store->id);
+
     }
 
     /** @test */
@@ -296,6 +306,7 @@ class ProductUnitTest extends TestCase
         $product = factory(Product::class)->create();
         $productName = 'apple';
         $cover = UploadedFile::fake()->image('file.png', 600, 600);
+        $store = factory(Store::class)->create();
 
         $params = [
             'sku' => '11111',
@@ -306,6 +317,7 @@ class ProductUnitTest extends TestCase
             'quantity' => 11,
             'price' => 9.95,
             'status' => 1,
+            'store_id' => $store->id,
             'image' => [
                 UploadedFile::fake()->image('file.png', 200, 200),
                 UploadedFile::fake()->image('file1.png', 200, 200),
@@ -324,6 +336,7 @@ class ProductUnitTest extends TestCase
     {
         $product = 'apple';
         $cover = UploadedFile::fake()->image('file.png', 600, 600);
+        $store = factory(Store::class)->create();
 
         $params = [
             'sku' => $this->faker->numberBetween(1111111, 999999),
@@ -334,6 +347,7 @@ class ProductUnitTest extends TestCase
             'quantity' => 10,
             'price' => 9.95,
             'status' => 1,
+            'store_id' => $store->id
         ];
 
         $product = new ProductRepository(new Product);
@@ -348,5 +362,6 @@ class ProductUnitTest extends TestCase
         $this->assertEquals($params['quantity'], $created->quantity);
         $this->assertEquals($params['price'], $created->price);
         $this->assertEquals($params['status'], $created->status);
+        $this->assertEquals($params['store_id'], $created->store->id);
     }
 }

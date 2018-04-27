@@ -37,7 +37,7 @@ class StoreController extends Controller
      */
     public function __construct(
         StoreRepositoryInterface $storeRepository,
-        CategoryRepositoryInterface $categoryRepository
+        ProductRepositoryInterface $productRepository
     ) {
         $this->storeRepo = $storeRepository;
         $this->productRepo = $productRepository;
@@ -56,9 +56,11 @@ class StoreController extends Controller
           $list = $this->storeRepo->searchStore(request()->input('q'));
       }
 
-      $store = $list->map(function (Store $item) {
+
+      $stores = $list->map(function (Store $item) {
           return $this->transformStore($item);
       })->all();
+
 
       return view('admin.stores.list', [
           'stores' => $this->storeRepo->paginateArrayResults($stores, 10)
@@ -73,18 +75,28 @@ class StoreController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.stores.create');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  CreateStoreRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateStoreRequest $request)
     {
-        //
+        $data = $request->except('_token', '_method');
+        $data['slug'] = str_slug($request->input('name'));
+
+        if ($request->hasFile('cover') && $request->file('cover') instanceof UploadedFile) {
+            $data['cover'] = $this->storeRepo->saveCoverImage($request->file('cover'));
+        }
+
+        $store = $this->storeRepo->createStore($data);
+
+        $request->session()->flash('message', 'Create successful');
+        return redirect()->route('admin.stores.edit', $store->id);
     }
 
     /**
@@ -93,9 +105,9 @@ class StoreController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id)
     {
-        //
+      return view('admin.stores.show', ['store' => $this->storeRepo->findStoreById($id)]);
     }
 
     /**
@@ -104,21 +116,38 @@ class StoreController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id)
     {
-        //
+        $store = $this->storeRepo->findStoreById($id);
+
+        return view('admin.stores.edit', [
+            'store' => $store
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  UpdateStoreRequest $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateStoreRequest $request, int $id)
     {
-        //
+        $store = $this->storeRepo->findStoreById($id);
+
+        $data = $request->except('_token', '_method');
+        $data['slug'] = str_slug($request->input('name'));
+
+        if ($request->hasFile('cover') && $request->file('cover') instanceof UploadedFile) {
+            $data['cover'] = $this->storeRepo->saveCoverImage($request->file('cover'));
+        }
+
+        $this->storeRepo->updateStore($data, $id);
+
+        $request->session()->flash('message', 'Update successful');
+
+        return redirect()->route('admin.stores.edit', $id);
     }
 
     /**
@@ -127,8 +156,25 @@ class StoreController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
-        //
+        $store = $this->storeRepo->findStoreById($id);
+
+        $this->storeRepo->delete($id);
+
+        request()->session()->flash('message', 'Delete successful');
+        return redirect()->route('admin.stores.index');
+    }
+
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function removeImage(Request $request)
+    {
+        $this->storeRepo->deleteFile($request->only('store', 'image'), 'uploads');
+        request()->session()->flash('message', 'Image delete successful');
+        return redirect()->back();
     }
 }
