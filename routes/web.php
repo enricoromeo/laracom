@@ -25,16 +25,17 @@ Route::namespace('Admin')->group(function () {
 Route::group(['prefix' => 'admin', 'middleware' => ['admin'], 'as' => 'admin.' ], function () {
     Route::namespace('Admin')->group(function () {
         Route::get('/', 'DashboardController@index')->name('dashboard');
+        Route::group(['middleware' => ['role:admin|Store Manager,require_all,guard:admin']], function () {
+            Route::namespace('Stores')->group(function () {
+                Route::resource('stores', 'StoreController');
+                Route::get('remove-image-store', 'StoreController@removeImage')->name('store.remove.image');
+            });
+        });
         Route::group(['middleware' => ['role:admin,guard:admin']], function () {
             Route::namespace('Products')->group(function () {
                 Route::resource('products', 'ProductController');
                 Route::get('remove-image-product', 'ProductController@removeImage')->name('product.remove.image');
                 Route::get('remove-image-thumb', 'ProductController@removeThumbnail')->name('product.remove.thumb');
-            });
-            Route::namespace('Stores')->group(function () {
-                Route::resource('stores', 'StoreController');
-                Route::get('remove-image-store', 'StoreController@removeImage')->name('store.remove.image');
-
             });
             Route::namespace('Customers')->group(function () {
                 Route::resource('customers', 'CustomerController');

@@ -60,5 +60,8 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'admin' => \App\Http\Middleware\RedirectIfNotAdmin::class,
         'checkout' => \App\Http\Middleware\RedirectIfNotAdmin::class,
+        //'role' => \Laratrust\Middleware\LaratrustRole::class,
+        //'permission' => \Laratrust\Middleware\LaratrustPermission::class,
+      //  'ability' => \Laratrust\Middleware\LaratrustAbility::class,
     ];
 }

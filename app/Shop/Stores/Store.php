@@ -3,6 +3,7 @@
 namespace App\Shop\Stores;
 
 use App\Shop\Products\Product;
+use App\Shop\Employees\Employee;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Sofa\Eloquence\Eloquence;
@@ -37,6 +38,11 @@ class Store extends Model
     public function products()
     {
         return $this->hasMany(Product::class);
+    }
+
+    public function employees()
+    {
+        return $this->belongsToMany(Employee::class);
     }
 
     /**

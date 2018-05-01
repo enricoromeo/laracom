@@ -20,6 +20,20 @@
             <li><a href="{{ route('admin.dashboard') }}"> <i class="fa fa-home"></i> Dashboard</a></li>
             @if($admin)
                 <li class="header">SELL</li>
+                @if($storeManager)
+                  <li class="treeview @if(request()->segment(2) == 'stores') active @endif">
+                      <a href="#">
+                          <i class="fa fa-gift"></i> <span>Stores</span>
+                          <span class="pull-right-container">
+                                  <i class="fa fa-angle-left pull-right"></i>
+                          </span>
+                      </a>
+                      <ul class="treeview-menu">
+                          <li><a href="{{ route('admin.stores.index') }}"><i class="fa fa-circle-o"></i> List stores</a></li>
+                          <li><a href="{{ route('admin.stores.create') }}"><i class="fa fa-plus"></i> Create store</a></li>
+                      </ul>
+                  </li>
+                @endif
                 <li class="treeview @if(request()->segment(2) == 'products') active @endif">
                     <a href="#">
                         <i class="fa fa-gift"></i> <span>Products</span>

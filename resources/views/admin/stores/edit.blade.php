@@ -45,6 +45,48 @@
                                     <option value="1" @if($store->status == 1) selected="selected" @endif>Enable</option>
                                 </select>
                             </div>
+
+                            <div class="row"></div>
+
+                           <div class="form-group">
+                             <label for="products"> Products </label>
+                             <table class="table table-sm">
+                               <thead>
+                                 <tr>
+                                   <th scope="col">#</th>
+                                   <th scope="col">Cover</th>
+                                   <th scope="col">Name</th>
+                                   <th scope="col">Description</th>
+                                   <th scope="col">Quantity</th>
+                                   <th scope="col">Status</th>
+                                 </tr>
+                               </thead>
+                               <tbody>
+                                 @if($store->products)
+                                   @foreach($store->products as $product)
+                                     <tr>
+                                       <th scope="row">{{$loop->iteration}}</th>
+                                       <td><img src="{{ asset("storage/$product->cover") }}" alt="{{$product->name}}" class="img-thumbnail" height="50" width="100"></td>
+                                       <td>{{$product->name}}</td>
+                                       <td>{{$product->description}}</td>
+                                       <td>{{$product->quantity}}</td>
+                                       @if($product->status == 1)
+                                         <td>Enabled</td>
+                                       @else
+                                         <td>Disabled</td>
+                                       @endif
+                                     </tr>
+                                   @endforeach
+                                @endif
+                               </tbody>
+                             </table>
+                           </div>
+
+                        </div>
+
+                        <div class="col-md-4">
+                          sidebar here
+
                         </div>
 
                     </div>

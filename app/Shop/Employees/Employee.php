@@ -2,10 +2,12 @@
 
 namespace App\Shop\Employees;
 
+use App\Shop\Stores\Store;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laratrust\Traits\LaratrustUserTrait;
+
 
 class Employee extends Authenticatable
 {
@@ -34,4 +36,9 @@ class Employee extends Authenticatable
     ];
 
     protected $dates = ['deleted_at'];
+
+    public function stores()
+    {
+        return $this->belongsToMany(Store::class);
+    }
 }

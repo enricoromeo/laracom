@@ -28,6 +28,8 @@ class GlobalTemplateServiceProvider extends ServiceProvider
         view()->composer('layouts.admin.app', function ($view) {
             $view->with('user', Auth::guard('admin')->user());
             $view->with('admin', $this->isAdmin(Auth::guard('admin')->user()));
+            $view->with('storeManager', $this->isStoreManager(Auth::guard('admin')->user()));
+
         });
 
         view()->composer(['layouts.front.app', 'front.categories.sidebar-category'], function ($view) {
@@ -67,5 +69,15 @@ class GlobalTemplateServiceProvider extends ServiceProvider
     {
         $employeeRepo = new EmployeeRepository($employee);
         return $employeeRepo->hasRole('admin');
+    }
+
+    /**
+     * @param Employee $employee
+     * @return bool
+     */
+    private function isStoreManager(Employee $employee)
+    {
+        $employeeRepo = new EmployeeRepository($employee);
+        return $employeeRepo->hasRole('Store Manager');
     }
 }

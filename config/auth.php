@@ -50,6 +50,10 @@ return [
             'driver' => 'session',
             'provider' => 'admin',
         ],
+        'Store Manager' => [
+            'driver' => 'session',
+            'provider' => 'Store Manager',
+        ],
 
         'api' => [
             'driver' => 'token',
@@ -81,6 +85,10 @@ return [
         ],
 
          'admin' => [
+             'driver' => 'eloquent',
+             'model' => App\Shop\Employees\Employee::class,
+         ],
+         'Store Manager' => [
              'driver' => 'eloquent',
              'model' => App\Shop\Employees\Employee::class,
          ],
