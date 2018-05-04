@@ -38,6 +38,8 @@ use App\Shop\Stores\Repositories\Interfaces\StoreRepositoryInterface;
 use App\Shop\Stores\Repositories\StoreRepository;
 use App\Shop\Provinces\Repositories\Interfaces\ProvinceRepositoryInterface;
 use App\Shop\Provinces\Repositories\ProvinceRepository;
+use App\Shop\Roles\Repositories\RoleRepository;
+use App\Shop\Roles\Repositories\RoleRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -132,6 +134,11 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             CartRepositoryInterface::class,
             CartRepository::class
+        );
+
+        $this->app->bind(
+            RoleRepositoryInterface::class,
+            RoleRepository::class
         );
     }
 }

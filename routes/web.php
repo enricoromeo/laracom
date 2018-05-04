@@ -30,25 +30,13 @@ Route::group(['prefix' => 'admin', 'middleware' => ['admin'], 'as' => 'admin.' ]
                 Route::resource('stores', 'StoreController');
                 Route::get('remove-image-store', 'StoreController@removeImage')->name('store.remove.image');
             });
-        });
-        Route::group(['middleware' => ['role:admin,guard:admin']], function () {
-            Route::namespace('Products')->group(function () {
-                Route::resource('products', 'ProductController');
-                Route::get('remove-image-product', 'ProductController@removeImage')->name('product.remove.image');
-                Route::get('remove-image-thumb', 'ProductController@removeThumbnail')->name('product.remove.thumb');
-            });
-            Route::namespace('Customers')->group(function () {
-                Route::resource('customers', 'CustomerController');
-                Route::resource('customers.addresses', 'CustomerAddressController');
-            });
             Route::namespace('Categories')->group(function () {
                 Route::resource('categories', 'CategoryController');
                 Route::get('remove-image-category', 'CategoryController@removeImage')->name('category.remove.image');
             });
-            Route::namespace('Orders')->group(function () {
-                Route::resource('orders', 'OrderController');
-                Route::resource('order-statuses', 'OrderStatusController');
-                Route::get('orders/{id}/invoice', 'OrderController@generateInvoice')->name('orders.invoice.generate');
+            Route::namespace('Customers')->group(function () {
+                Route::resource('customers', 'CustomerController');
+                Route::resource('customers.addresses', 'CustomerAddressController');
             });
             Route::resource('employees', 'EmployeeController');
             Route::get('employees/{id}/profile', 'EmployeeController@getProfile')->name('employee.profile');
@@ -60,6 +48,19 @@ Route::group(['prefix' => 'admin', 'middleware' => ['admin'], 'as' => 'admin.' ]
             Route::resource('couriers', 'Couriers\CourierController');
             Route::resource('attributes', 'Attributes\AttributeController');
             Route::resource('attributes.values', 'Attributes\AttributeValueController');
+        });
+        Route::group(['middleware' => ['role:admin,guard:admin']], function () {
+            Route::namespace('Products')->group(function () {
+                Route::resource('products', 'ProductController');
+                Route::get('remove-image-product', 'ProductController@removeImage')->name('product.remove.image');
+                Route::get('remove-image-thumb', 'ProductController@removeThumbnail')->name('product.remove.thumb');
+            });
+            Route::namespace('Orders')->group(function () {
+                Route::resource('orders', 'OrderController');
+                Route::resource('order-statuses', 'OrderStatusController');
+                Route::get('orders/{id}/invoice', 'OrderController@generateInvoice')->name('orders.invoice.generate');
+            });
+
         });
     });
 });

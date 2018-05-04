@@ -92,6 +92,11 @@ class EmployeeRepository extends BaseRepository implements EmployeeRepositoryInt
         return $this->model->roles()->get();
     }
 
+    public function listRolesByEmployee(Employee $employee): Collection
+    {
+       return $employee->roles()->get();
+    }
+
     /**
      * @param string $roleName
      * @return bool

@@ -6,6 +6,7 @@ use App\Shop\Admins\Requests\CreateEmployeeRequest;
 use App\Shop\Admins\Requests\UpdateEmployeeRequest;
 use App\Shop\Employees\Repositories\EmployeeRepository;
 use App\Shop\Employees\Repositories\Interfaces\EmployeeRepositoryInterface;
+use App\Shop\Roles\Repositories\RoleRepositoryInterface;
 use App\Http\Controllers\Controller;
 
 class EmployeeController extends Controller
@@ -14,14 +15,19 @@ class EmployeeController extends Controller
      * @var EmployeeRepositoryInterface
      */
     private $employeeRepo;
+    /**
+     * @var RoleRepositoryInterface
+     */
+    private $roleRepo;
 
     /**
      * EmployeeController constructor.
      * @param EmployeeRepositoryInterface $employeeRepository
      */
-    public function __construct(EmployeeRepositoryInterface $employeeRepository)
+    public function __construct(EmployeeRepositoryInterface $employeeRepository, RoleRepositoryInterface $roleRepository)
     {
         $this->employeeRepo = $employeeRepository;
+        $this->roleRepo = $roleRepository;
     }
 
     /**
@@ -82,7 +88,15 @@ class EmployeeController extends Controller
     public function edit(int $id)
     {
         $employee = $this->employeeRepo->findEmployeeById($id);
-        return view('admin.employees.edit', ['employee' => $employee]);
+        $allRoles = $this->roleRepo->listRoles('created_at', 'desc');
+        return view(
+          'admin.employees.edit', [
+            'employee' => $employee,
+            'allRoles' => $allRoles,
+          //  'rolesByEmployee' => $this->employeeRepo->listRolesByEmployee($employee),
+            'selectedIds' => $employee->roles()->pluck('role_id')->all()
+
+        ]);
     }
 
     /**
@@ -101,6 +115,12 @@ class EmployeeController extends Controller
 
         if ($request->has('password')) {
             $empRepo->updateEmployee(['password' => bcrypt($request->input('password'))]);
+        }
+
+        if ($request->has('roles')) {
+            $employee->roles()->sync($request->input('roles'));
+        } else {
+            $employee->roles()->detach();
         }
 
         $request->session()->flash('message', 'Update successful');

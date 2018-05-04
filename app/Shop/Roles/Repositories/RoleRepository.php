@@ -6,6 +6,8 @@ use App\Shop\Base\BaseRepository;
 use App\Shop\Roles\Exceptions\CreateRoleErrorException;
 use App\Shop\Roles\Role;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Collection;
+
 
 class RoleRepository extends BaseRepository implements RoleRepositoryInterface
 {
@@ -25,6 +27,18 @@ class RoleRepository extends BaseRepository implements RoleRepositoryInterface
     }
 
     /**
+     * List all Roles
+     *
+     * @param string $order
+     * @param string $sort
+     * @return Collection
+     */
+     public function listRoles(string $order = 'id', string $sort = 'desc') : Collection
+     {
+          return $this->all(['*'], $order, $sort);
+     }
+
+    /**
      * @param array $data
      * @return Role
      * @throws CreateRoleErrorException
@@ -39,4 +53,6 @@ class RoleRepository extends BaseRepository implements RoleRepositoryInterface
             throw new CreateRoleErrorException($e);
         }
     }
+
+
 }
