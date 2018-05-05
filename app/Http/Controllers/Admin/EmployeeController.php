@@ -93,9 +93,7 @@ class EmployeeController extends Controller
           'admin.employees.edit', [
             'employee' => $employee,
             'allRoles' => $allRoles,
-          //  'rolesByEmployee' => $this->employeeRepo->listRolesByEmployee($employee),
             'selectedIds' => $employee->roles()->pluck('role_id')->all()
-
         ]);
     }
 
