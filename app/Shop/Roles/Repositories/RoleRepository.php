@@ -20,17 +20,7 @@ class RoleRepository extends BaseRepository implements RoleRepositoryInterface
         parent::__construct($role);
         $this->model = $role;
     }
-    /**
-     * List all Roles
-     *
-     * @param string $order
-     * @param string $sort
-     * @return Collection
-     */
-     public function listRoles(string $order = 'id', string $sort = 'desc') : Collection
-     {
-          return $this->all(['*'], $order, $sort);
-     }
+
     /**
      * List all Roles
      *
