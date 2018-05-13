@@ -25,4 +25,10 @@ interface StoreRepositoryInterface extends BaseRepositoryInterface
 
   public function searchStore(string $text) : Collection;
 
+  public function detachEmployees();
+
+  public function getEmployees() : Collection;
+
+  public function syncEmployees(array $params);
+
 }

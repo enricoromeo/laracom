@@ -6,6 +6,7 @@ use App\Shop\Base\BaseRepository;
 use App\Shop\Employees\Employee;
 use App\Shop\Employees\Exceptions\EmployeeNotFoundException;
 use App\Shop\Employees\Repositories\Interfaces\EmployeeRepositoryInterface;
+use App\Shop\Stores\Store;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -120,6 +121,54 @@ class EmployeeRepository extends BaseRepository implements EmployeeRepositoryInt
            $isAuthUser = true;
         }
         return $isAuthUser;
+    }
+
+    /**
+     * Associate a store to a Employee
+     *
+     * @param Store $store
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function associateStore(Store $store)
+    {
+        return $this->model->stores()->save($store);
+    }
+
+    /**
+     * Return all the stores associated with the employee
+     *
+     * @return mixed
+     */
+    public function findStores() : Collection
+    {
+        return $this->model->stores;
+    }
+
+    /**
+     * @param array $params
+     */
+    public function syncStores(array $params)
+    {
+        $this->model->stores()->sync($params);
+    }
+
+
+    /**
+     * Detach the association of the stores
+     *
+     */
+    public function detachStores()
+    {
+        $this->model->stores()->detach();
+    }
+
+    /**
+     * Attach the association of the Store
+     * @param Store $store
+     */
+    public function attachStore(Store $store)
+    {
+        $this->model->stores()->attach($store);
     }
 
 

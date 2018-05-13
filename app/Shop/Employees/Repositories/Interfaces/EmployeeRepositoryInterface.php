@@ -4,6 +4,7 @@ namespace App\Shop\Employees\Repositories\Interfaces;
 
 use App\Shop\Base\Interfaces\BaseRepositoryInterface;
 use App\Shop\Employees\Employee;
+use App\Shop\Stores\Store;
 use Illuminate\Support\Collection;
 
 interface EmployeeRepositoryInterface extends BaseRepositoryInterface
@@ -23,4 +24,16 @@ interface EmployeeRepositoryInterface extends BaseRepositoryInterface
     public function hasRole(string $roleName) : bool;
 
     public function isAuthUser(Employee $employee): bool;
+
+    public function associateStore(Store $store);
+
+    public function findStores() : Collection;
+
+    public function syncStores(array $params);
+
+    public function detachStores();
+
+    public function attachStore(Store $store);
+
+
 }

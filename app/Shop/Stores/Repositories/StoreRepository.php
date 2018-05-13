@@ -137,5 +137,33 @@ class StoreRepository extends BaseRepository implements StoreRepositoryInterface
         return $this->model->searchStore($text);
     }
 
+    /**
+     * Detach the employees
+     */
+    public function detachEmployees()
+    {
+        $this->model->employees()->detach();
+    }
+
+    /**
+     * Return the employees which the Store is associated with
+     *
+     * @return Collection
+     */
+    public function getEmployees() : Collection
+    {
+        return $this->model->employees()->get();
+    }
+
+    /**
+     * Sync the employees
+     *
+     * @param array $params
+     */
+    public function syncEmployees(array $params)
+    {
+        $this->model->employees()->sync($params);
+    }
+
 
 }
