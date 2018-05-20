@@ -6,6 +6,7 @@
             <td class="col-md-2">Description</td>
             <td class="col-md-2">Cover</td>
             <td class="col-md-1">Status</td>
+            <td class="col-md-2">Employees</td>
             <td class="col-md-3">Actions</td>
         </tr>
         </thead>
@@ -22,6 +23,15 @@
                     @endif
                 </td>
                 <td>@include('layouts.status', ['status' => $store->status])</td>
+                <td>
+                    @if($store->employees)
+                      @foreach ($store->employees as $employee)
+                         <ul>
+                           <li><a href="{{ route('admin.employees.show', $employee->id)}}">{{ $employee->name }} </a></li>
+                         </ul>
+                      @endforeach
+                    @endif
+                </td>
                 <td>
                     <form action="{{ route('admin.stores.destroy', $store->id) }}" method="post" class="form-horizontal">
                         {{ csrf_field() }}
