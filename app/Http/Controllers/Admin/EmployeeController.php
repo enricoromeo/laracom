@@ -7,6 +7,7 @@ use App\Shop\Admins\Requests\UpdateEmployeeRequest;
 use App\Shop\Employees\Repositories\EmployeeRepository;
 use App\Shop\Employees\Repositories\Interfaces\EmployeeRepositoryInterface;
 use App\Shop\Roles\Repositories\RoleRepositoryInterface;
+use App\Shop\Stores\Repositories\Interfaces\StoreRepositoryInterface;
 use App\Http\Controllers\Controller;
 
 
@@ -20,15 +21,22 @@ class EmployeeController extends Controller
      * @var RoleRepositoryInterface
      */
     private $roleRepo;
+    /**
+     * @var StoreRepositoryInterface
+     */
+    private $storeRepo;
 
     /**
      * EmployeeController constructor.
      * @param EmployeeRepositoryInterface $employeeRepository
      */
-    public function __construct(EmployeeRepositoryInterface $employeeRepository, RoleRepositoryInterface $roleRepository)
+    public function __construct(EmployeeRepositoryInterface $employeeRepository,
+                                RoleRepositoryInterface $roleRepository,
+                                StoreRepositoryInterface $storeRepository)
     {
         $this->employeeRepo = $employeeRepository;
         $this->roleRepo = $roleRepository;
+        $this->storeRepo = $storeRepository;
     }
 
     /**
@@ -54,6 +62,7 @@ class EmployeeController extends Controller
     {
         return view('admin.employees.create');
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -91,12 +100,18 @@ class EmployeeController extends Controller
         $employee = $this->employeeRepo->findEmployeeById($id);
         $allRoles = $this->roleRepo->listRoles('created_at', 'desc');
         $isCurrentUser = $this->employeeRepo->isAuthUser($employee);
+        $empRepo = new EmployeeRepository($employee); //verificare
+        $employeeStores = $empRepo->findStores();
+
+        $storesWithoutEmployee = $this->storeRepo->storesWithoutEmployee();
 
         return view(
           'admin.employees.edit', [
             'employee' => $employee,
             'allRoles' => $allRoles,
+            'employeeStores' => $employeeStores,
             'isCurrentUser' => $isCurrentUser,
+            'storesWithoutEmployee' => $storesWithoutEmployee,
             'selectedIds' => $employee->roles()->pluck('role_id')->all()
         ]);
     }
@@ -124,6 +139,10 @@ class EmployeeController extends Controller
             $employee->roles()->sync($request->input('roles'));
         } else if(!$isCurrentUser){
             $employee->roles()->detach($request->input('roles'));
+        }
+
+        if ($request->has('storesWithoutEmployee')){
+           $employee->stores()->syncWithoutDetaching($request->get('storesWithoutEmployee'));
         }
 
         $request->session()->flash('message', 'Update successful');
@@ -178,4 +197,19 @@ class EmployeeController extends Controller
         $update = new EmployeeRepository($employee);
         $update->updateEmployee($request->except('_token', '_method'));
     }
+
+    /**
+     * @param UpdateEmployeeRequest $request
+     * ß@param $employeeId
+     * @param $storeId
+     */
+    public function detachStoreAssigned(int $employeeId, int $storeId)
+    {
+    	$employee = $this->employeeRepo->findEmployeeById($employeeId);
+    	$employee->stores()->detach($storeId);
+
+      request()->session()->flash('message', 'Update successful');
+      return redirect()->route('admin.employees.edit', $employeeId);
+    }
+
 }

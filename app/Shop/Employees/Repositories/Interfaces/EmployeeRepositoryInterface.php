@@ -31,9 +31,7 @@ interface EmployeeRepositoryInterface extends BaseRepositoryInterface
 
     public function syncStores(array $params);
 
-    public function detachStores();
-
-    public function attachStore(Store $store);
+    public function employeesWithoutStore(): Collection;
 
 
 }

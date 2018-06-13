@@ -40,6 +40,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['admin'], 'as' => 'admin.' ]
             });
             Route::resource('employees', 'EmployeeController');
             Route::get('employees/{id}/profile', 'EmployeeController@getProfile')->name('employee.profile');
+            Route::get('employees/{employeeId}/profile/detachstore/{storeId}', 'EmployeeController@detachStoreAssigned')->name('employee.profile.detachstore');
             Route::put('employees/{id}/profile', 'EmployeeController@updateProfile')->name('employee.profile.update');
             Route::resource('addresses', 'Addresses\AddressController');
             Route::resource('countries', 'Countries\CountryController');

@@ -149,27 +149,20 @@ class EmployeeRepository extends BaseRepository implements EmployeeRepositoryInt
      */
     public function syncStores(array $params)
     {
-        $this->model->stores()->sync($params);
+        return $this->model->stores()->sync($params);
     }
 
 
-    /**
-     * Detach the association of the stores
-     *
-     */
-    public function detachStores()
-    {
-        $this->model->stores()->detach();
-    }
 
     /**
-     * Attach the association of the Store
-     * @param Store $store
+     * List all the employees without Store
+      * @return array
      */
-    public function attachStore(Store $store)
+    public function employeesWithoutStore(): Collection
     {
-        $this->model->stores()->attach($store);
+       return $this->model->doesntHave('stores')->paginate(15)->get();
     }
+
 
 
 }

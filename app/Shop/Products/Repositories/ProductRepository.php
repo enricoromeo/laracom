@@ -289,4 +289,9 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
         return $this->model->store;
     }
 
+    public function findEmployee(Store $store) : Employee
+    {
+        return $store->model->employees;
+    }
+
 }

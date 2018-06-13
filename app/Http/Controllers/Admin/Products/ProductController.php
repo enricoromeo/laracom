@@ -305,4 +305,5 @@ class ProductController extends Controller
             return $validator;
         }
     }
+
 }

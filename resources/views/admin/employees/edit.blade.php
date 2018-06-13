@@ -33,6 +33,9 @@
                                     <option value="1" @if($employee->status == 1) selected="selected" @endif>Enable</option>
                                 </select>
                             </div>
+                            @include('admin.shared.store-to-assign-select',['storesWithoutEmployee' => $storesWithoutEmployee])
+                            @include('admin.shared.store-assigned-table-list', ['employeeStores' => $employeeStores, 'employee' => $employee])
+
                         </div>
                         <div class="col-md-4">
                             <label for="roles">Roles</label>

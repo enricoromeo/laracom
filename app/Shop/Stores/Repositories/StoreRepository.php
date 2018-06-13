@@ -165,5 +165,14 @@ class StoreRepository extends BaseRepository implements StoreRepositoryInterface
         $this->model->employees()->sync($params);
     }
 
+    /**
+     * List all the employees without Store
+      * @return array
+     */
+    public function storesWithoutEmployee(): Collection
+    {
+       return $this->model->doesntHave('employees')->get();
+    }
+
 
 }
