@@ -9,6 +9,8 @@ use App\Shop\ProductAttributes\ProductAttribute;
 use App\Shop\Products\Product;
 use App\Shop\Products\Repositories\Interfaces\ProductRepositoryInterface;
 use App\Shop\Products\Repositories\ProductRepository;
+use App\Shop\Employees\Repositories\Interfaces\EmployeeRepositoryInterface;
+use App\Shop\Employees\Repositories\EmployeeRepository;
 use App\Shop\Products\Requests\CreateProductRequest;
 use App\Shop\Products\Requests\UpdateProductRequest;
 use App\Http\Controllers\Controller;
@@ -33,6 +35,11 @@ class ProductController extends Controller
     private $categoryRepo;
 
     /**
+     * @var EmployeeRepositoryInterface
+     */
+    private $employeeRepo;
+
+    /**
      * @var AttributeRepositoryInterface
      */
     private $attributeRepo;
@@ -55,12 +62,14 @@ class ProductController extends Controller
     public function __construct(
         ProductRepositoryInterface $productRepository,
         CategoryRepositoryInterface $categoryRepository,
+        EmployeeRepositoryInterface $employeeRepository,
         AttributeRepositoryInterface $attributeRepository,
         AttributeValueRepositoryInterface $attributeValueRepository,
         ProductAttribute $productAttribute
     ) {
         $this->productRepo = $productRepository;
         $this->categoryRepo = $categoryRepository;
+        $this->employeeRepo = $employeeRepository;
         $this->attributeRepo = $attributeRepository;
         $this->attributeValueRepository = $attributeValueRepository;
         $this->productAttribute = $productAttribute;
@@ -87,6 +96,33 @@ class ProductController extends Controller
             'products' => $this->productRepo->paginateArrayResults($products, 10)
         ]);
     }
+
+    /**
+     * Display a listing of the resource passing an Employee id
+     * @param $employeeId
+     * @return \Illuminate\Http\Response
+     */
+    public function indexByEmployee(int $employeeId)
+    {
+        //dd($employeeId);
+        $employee = $this->employeeRepo->findEmployeeById($employeeId);
+
+        $list = $employee->stores->pluck('products')->collapse();
+
+        if (request()->has('q') && request()->input('q') != '') {
+            $list = $this->productRepo->searchProduct(request()->input('q'));
+        }
+
+        $products = $list->map(function (Product $item) {
+            return $this->transformProduct($item);
+        })->all();
+
+        return view('admin.products.listbyemployee', [
+            'products' => $this->productRepo->paginateArrayResults($products, 10)
+        ]);
+    }
+
+
 
     /**
      * Show the form for creating a new resource.

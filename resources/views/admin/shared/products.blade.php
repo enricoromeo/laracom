@@ -8,7 +8,8 @@
             <td class="col-md-1">Quantity</td>
             <td class="col-md-1">Price</td>
             <td class="col-md-1">Status</td>
-            <td class="col-md-3">Actions</td>
+            <td class="col-md-2">Actions</td>
+            <td class="col-md-1">Store</td>
         </tr>
         </thead>
         <tbody>
@@ -35,6 +36,11 @@
                             <button onclick="return confirm('Are you sure?')" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-times"></i> Delete</button>
                         </div>
                     </form>
+                </td>
+                <td>
+                    @if($product->store)
+                      <a href="{{ route('admin.stores.show', $product->store->id) }}">{{ $product->store->name }}</a>
+                    @endif
                 </td>
             </tr>
         @endforeach

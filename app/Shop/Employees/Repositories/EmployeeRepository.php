@@ -123,6 +123,7 @@ class EmployeeRepository extends BaseRepository implements EmployeeRepositoryInt
         return $isAuthUser;
     }
 
+
     /**
      * Associate a store to a Employee
      *

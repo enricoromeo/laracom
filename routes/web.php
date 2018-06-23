@@ -53,6 +53,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['admin'], 'as' => 'admin.' ]
         Route::group(['middleware' => ['role:admin,guard:admin']], function () {
             Route::namespace('Products')->group(function () {
                 Route::resource('products', 'ProductController');
+                Route::get('products-by-employee/{employeeId}', 'ProductController@indexByEmployee')->name('products.index.employee');
                 Route::get('remove-image-product', 'ProductController@removeImage')->name('product.remove.image');
                 Route::get('remove-image-thumb', 'ProductController@removeThumbnail')->name('product.remove.thumb');
             });
