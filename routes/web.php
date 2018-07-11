@@ -54,6 +54,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['admin'], 'as' => 'admin.' ]
             Route::namespace('Products')->group(function () {
                 Route::resource('products', 'ProductController');
                 Route::get('products-by-employee/{employeeId}', 'ProductController@indexByEmployee')->name('products.index.employee');
+                Route::get('create-product-by-store/{storeId}', 'ProductController@createByStore')->name('products.create.by-store');
+                Route::post('create-product-by-store/{storeId}', 'ProductController@store')->name('products.store.by-store');
                 Route::get('remove-image-product', 'ProductController@removeImage')->name('product.remove.image');
                 Route::get('remove-image-thumb', 'ProductController@removeThumbnail')->name('product.remove.thumb');
             });

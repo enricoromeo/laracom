@@ -9,7 +9,7 @@
             <td class="col-md-1">Price</td>
             <td class="col-md-1">Status</td>
             <td class="col-md-2">Actions</td>
-            <td class="col-md-1">Store</td>
+            <td class="ecol-md-1">Store</td>
         </tr>
         </thead>
         <tbody>

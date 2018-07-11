@@ -45,6 +45,7 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
         return $this->all($columns, $order, $sort);
     }
 
+
     /**
      * Create the product
      *

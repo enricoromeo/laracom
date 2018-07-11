@@ -55,6 +55,7 @@ class ProductController extends Controller
      * ProductController constructor.
      * @param ProductRepositoryInterface $productRepository
      * @param CategoryRepositoryInterface $categoryRepository
+     * @param EmployeeRepositoryInterface $employeeRepository
      * @param AttributeRepositoryInterface $attributeRepository
      * @param AttributeValueRepositoryInterface $attributeValueRepository
      * @param ProductAttribute $productAttribute
@@ -82,7 +83,10 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $list = $this->productRepo->listProducts('id');
+        //$list = $this->productRepo->listProducts('id');
+        $employee = $this->employeeRepo->findEmployeeById($employeeId);
+
+        $list = $employee->stores->pluck('products')->collapse();
 
         if (request()->has('q') && request()->input('q') != '') {
             $list = $this->productRepo->searchProduct(request()->input('q'));
@@ -104,7 +108,7 @@ class ProductController extends Controller
      */
     public function indexByEmployee(int $employeeId)
     {
-        //dd($employeeId);
+
         $employee = $this->employeeRepo->findEmployeeById($employeeId);
 
         $list = $employee->stores->pluck('products')->collapse();
@@ -138,21 +142,35 @@ class ProductController extends Controller
     }
 
     /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function createByStore(int $storeId)
+    {
+        $categories = $this->categoryRepo->listCategories('name', 'asc')->where('parent_id', 1);
+        $selectIds = [];
+        return view('admin.products.create', compact('categories', 'selectIds', 'storeId'));
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  CreateProductRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CreateProductRequest $request)
+    public function store(CreateProductRequest $request, int $storeId)
     {
         $data = $request->except('_token', '_method');
         $data['slug'] = str_slug($request->input('name'));
 
         if ($request->hasFile('cover') && $request->file('cover') instanceof UploadedFile) {
-            $data['cover'] = $this->productRepo->saveCoverImage($request->file('cover'));
+           $data['cover'] = $this->productRepo->saveCoverImage($request->file('cover'));
         }
 
+        $data['store_id'] = $storeId;
         $product = $this->productRepo->createProduct($data);
+        $product->store_id = $storeId;
         $this->saveProductImages($request, $product);
 
         if ($request->has('categories')) {
