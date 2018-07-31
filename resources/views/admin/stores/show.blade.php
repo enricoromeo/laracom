@@ -5,9 +5,10 @@
     <section class="content">
 
     @include('layouts.errors-and-messages')
-    <!-- Default box -->
-        @if($store)
+            @if($store)
+            <!-- Default box -->
             <div class="box">
+              @include('admin.shared.box-header-box-tools', ['boxTitle' => $store->name])
                 <div class="box-body">
                     <table class="table">
                         <thead>
@@ -38,7 +39,19 @@
                 </div>
             </div>
             <!-- /.box -->
-        @endif
+                @if($products)
+                    <div class="box">
+                          @include('admin.shared.box-header-box-tools', ['boxTitle' => "Products of " . $store->name])
+                          <div class="box-body">
+                            @include('admin.shared.products', ['products' => $products])
+                          </div>
+
+                        <div class="box-footer">
+                          {{ $products->links() }}
+                        </div>
+                    </div>
+                @endif
+            @endif <!-- /. end if Store -->
 
     </section>
     <!-- /.content -->

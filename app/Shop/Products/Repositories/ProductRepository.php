@@ -8,6 +8,7 @@ use App\Shop\ProductAttributes\ProductAttribute;
 use App\Shop\ProductImages\ProductImage;
 use App\Shop\Products\Exceptions\ProductInvalidArgumentException;
 use App\Shop\Products\Exceptions\ProductNotFoundException;
+use App\Shop\Employees\Employee;
 use App\Shop\Products\Product;
 use App\Shop\Stores\Store;
 use App\Shop\Products\Repositories\Interfaces\ProductRepositoryInterface;
@@ -43,6 +44,19 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
     public function listProducts(string $order = 'id', string $sort = 'desc', array $columns = ['*']) : Collection
     {
         return $this->all($columns, $order, $sort);
+    }
+
+    /**
+     * List all the products
+     *
+     * @param string $order
+     * @param string $sort
+     * @param array $columns
+     * @return Collection
+     */
+    public function listProductsByEmployee(Employee $employee, string $order = 'id', string $sort = 'desc', array $columns = ['*']) : Collection
+    {
+        return  $employee->stores->pluck('products')->collapse($columns, $order, $sort);
     }
 
 

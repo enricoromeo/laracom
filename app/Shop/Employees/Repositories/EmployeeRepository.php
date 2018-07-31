@@ -140,10 +140,11 @@ class EmployeeRepository extends BaseRepository implements EmployeeRepositoryInt
      *
      * @return mixed
      */
-    public function findStores() : Collection
+    public function findEmployeeStores() : Collection
     {
         return $this->model->stores;
     }
+
 
     /**
      * @param array $params
@@ -163,6 +164,7 @@ class EmployeeRepository extends BaseRepository implements EmployeeRepositoryInt
     {
        return $this->model->doesntHave('stores')->paginate(15)->get();
     }
+
 
 
 

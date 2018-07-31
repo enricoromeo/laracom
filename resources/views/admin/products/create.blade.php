@@ -5,7 +5,7 @@
     <section class="content">
         @include('layouts.errors-and-messages')
         <div class="box">
-            <form action="{{ route('admin.products.store.by-store', $storeId) }}" method="post" class="form" enctype="multipart/form-data">
+            <form action="{{ route('admin.products.store', $storeId) }}" method="post" class="form" enctype="multipart/form-data">
                 <div class="box-body">
                     {{ csrf_field() }}
                     <div class="form-group">

@@ -7,7 +7,9 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Shop\Stores\Store;
+use App\Shop\Products\Product;
 use App\Shop\Products\Repositories\Interfaces\ProductRepositoryInterface;
+use App\Shop\Products\Transformations\ProductTransformable;
 use App\Shop\Stores\Transformations\StoreTransformable;
 use App\Shop\Tools\UploadableTrait;
 use App\Shop\Stores\Repositories\Interfaces\StoreRepositoryInterface;
@@ -18,7 +20,7 @@ use App\Shop\Stores\Requests\UpdateStoreRequest;
 class StoreController extends Controller
 {
 
-    use StoreTransformable, UploadableTrait;
+    use StoreTransformable, UploadableTrait, ProductTransformable;
 
     /**
      * @var StoreRepositoryInterface
@@ -56,11 +58,9 @@ class StoreController extends Controller
           $list = $this->storeRepo->searchStore(request()->input('q'));
       }
 
-
       $stores = $list->map(function (Store $item) {
           return $this->transformStore($item);
       })->all();
-
 
       return view('admin.stores.list', [
           'stores' => $this->storeRepo->paginateArrayResults($stores, 10)
@@ -107,7 +107,17 @@ class StoreController extends Controller
      */
     public function show(int $id)
     {
-      return view('admin.stores.show', ['store' => $this->storeRepo->findStoreById($id)]);
+      $store = $this->storeRepo->findStoreById($id);
+      $storeRepo = new StoreRepository($store);
+      $storeProducts = $storeRepo->getProducts();
+
+      $arrProducts = $storeProducts->map(function (Product $item) {
+          return $this->transformProduct($item);
+      })->all();
+
+      $products = $this->productRepo->paginateArrayResults($arrProducts, 10);
+
+      return view('admin.stores.show', compact('store', 'products'));
     }
 
     /**

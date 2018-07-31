@@ -101,7 +101,7 @@ class EmployeeController extends Controller
         $allRoles = $this->roleRepo->listRoles('created_at', 'desc');
         $isCurrentUser = $this->employeeRepo->isAuthUser($employee);
         $empRepo = new EmployeeRepository($employee); //verificare
-        $employeeStores = $empRepo->findStores();
+        $employeeStores = $empRepo->findEmployeeStores();
 
         $storesWithoutEmployee = $this->storeRepo->storesWithoutEmployee();
 

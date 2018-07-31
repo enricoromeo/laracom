@@ -5,6 +5,7 @@ namespace App\Shop\Products\Repositories\Interfaces;
 use App\Shop\AttributeValues\AttributeValue;
 use App\Shop\Base\Interfaces\BaseRepositoryInterface;
 use App\Shop\ProductAttributes\ProductAttribute;
+use App\Shop\Employees\Employee;
 use App\Shop\Products\Product;
 use App\Shop\Stores\Store;
 use Illuminate\Http\UploadedFile;
@@ -55,5 +56,8 @@ interface ProductRepositoryInterface extends BaseRepositoryInterface
     public function findProductCombination(ProductAttribute $attribute);
 
     public function findStore() : Store;
-    
+
+    public function listProductsByEmployee(Employee $employee, string $order = 'id', string $sort = 'desc', array $columns = ['*']) : Collection;
+
+
 }

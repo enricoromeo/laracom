@@ -27,7 +27,7 @@ interface EmployeeRepositoryInterface extends BaseRepositoryInterface
 
     public function associateStore(Store $store);
 
-    public function findStores() : Collection;
+    public function findEmployeeStores() : Collection;
 
     public function syncStores(array $params);
 

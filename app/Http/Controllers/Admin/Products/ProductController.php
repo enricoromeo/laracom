@@ -19,6 +19,7 @@ use App\Shop\Tools\UploadableTrait;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Collection;
 
 class ProductController extends Controller
 {
@@ -50,6 +51,7 @@ class ProductController extends Controller
     private $attributeValueRepository;
 
     private $productAttribute;
+
 
     /**
      * ProductController constructor.
@@ -83,18 +85,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //$list = $this->productRepo->listProducts('id');
-        $employee = $this->employeeRepo->findEmployeeById($employeeId);
-
-        $list = $employee->stores->pluck('products')->collapse();
-
-        if (request()->has('q') && request()->input('q') != '') {
-            $list = $this->productRepo->searchProduct(request()->input('q'));
-        }
-
-        $products = $list->map(function (Product $item) {
-            return $this->transformProduct($item);
-        })->all();
+        $list = $this->productRepo->listProducts('id');
+        $products = $this->searchAndTrasformProduct('q', $list);
 
         return view('admin.products.list', [
             'products' => $this->productRepo->paginateArrayResults($products, 10)
@@ -108,25 +100,14 @@ class ProductController extends Controller
      */
     public function indexByEmployee(int $employeeId)
     {
-
         $employee = $this->employeeRepo->findEmployeeById($employeeId);
-
-        $list = $employee->stores->pluck('products')->collapse();
-
-        if (request()->has('q') && request()->input('q') != '') {
-            $list = $this->productRepo->searchProduct(request()->input('q'));
-        }
-
-        $products = $list->map(function (Product $item) {
-            return $this->transformProduct($item);
-        })->all();
+        $list = $this->productRepo->listProductsByEmployee($employee, 'id');
+        $products = $this->searchAndTrasformProduct('q', $list);
 
         return view('admin.products.listbyemployee', [
             'products' => $this->productRepo->paginateArrayResults($products, 10)
         ]);
     }
-
-
 
     /**
      * Show the form for creating a new resource.
@@ -135,20 +116,19 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('admin.products.create', [
-            'categories' => $this->categoryRepo->listCategories('name', 'asc')->where('parent_id', 1),
-            'selectedIds' => []
-        ]);
+        $categories = $this->getCategories();
+        $selectIds = [];
+        return view('admin.products.create', compact('categories', 'selectIds'));
     }
 
     /**
      * Show the form for creating a new resource.
-     *
+     * @param int $storeId
      * @return \Illuminate\Http\Response
      */
     public function createByStore(int $storeId)
     {
-        $categories = $this->categoryRepo->listCategories('name', 'asc')->where('parent_id', 1);
+        $categories = $this->getCategories();
         $selectIds = [];
         return view('admin.products.create', compact('categories', 'selectIds', 'storeId'));
     }
@@ -157,6 +137,7 @@ class ProductController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  CreateProductRequest $request
+     * @param int $storeId
      * @return \Illuminate\Http\Response
      */
     public function store(CreateProductRequest $request, int $storeId)
@@ -359,5 +340,30 @@ class ProductController extends Controller
             return $validator;
         }
     }
+
+    /**
+     * @param string $param
+     * @param Collection $list
+     * @return array $products
+     */
+    private function searchAndTrasformProduct(string $param, Collection $list) : array
+    {
+        if (request()->has($param) && request()->input($param) != '') {
+              $list = $this->productRepo->searchProduct(request()->input('q'));
+        }
+        $products = $list->map(function (Product $item) {
+            return $this->transformProduct($item);
+        })->all();
+        return $products;
+    }
+
+    /**
+    * @return Collection $categories
+    */
+    private function getCategories() : Collection
+    {
+       return $categories = $this->categoryRepo->listCategories('name', 'asc')->where('parent_id', 1);
+    }
+
 
 }
